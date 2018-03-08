@@ -2,6 +2,7 @@
 using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -10,34 +11,36 @@ using System.Web.Http;
 namespace app_i9arcondicionado.Controllers
 {
     [RoutePrefix("api/i9arcondicionado")]
-    public class EstadoController : ApiController
+    public class CidadeController : ApiController
     {
-        private Estado estado;
-        private List<Estado> estadoList = new List<Estado>();
+        private Cidade cidade;
+        private List<Cidade> cidadeList = new List<Cidade>();
         private NpgsqlDataReader leitor;
         private NpgsqlCommand query;
 
         [HttpGet]
-        [Route("estado")]
-        public IHttpActionResult getEstados()
+        [Route("cidade/{estadoFk}")]
+        public IHttpActionResult getCidadePorEstado(Decimal estadoFk)
         {
             NpgsqlConnection conexao = new ConexaoDB().ConexaoPostgreSQL();
             if (conexao != null)
             {
-                string consulta = "select * from estado";
+                string consulta = "select * from cidade where estado_fk =:estadoFk";
                 query = new NpgsqlCommand(consulta, conexao);
+                query.Parameters.Add(new NpgsqlParameter("estadoFk", DbType.Decimal));
+                query.Parameters[0].Value = estadoFk;
+                query.ExecuteReader();
                 try
                 {
-                    leitor = query.ExecuteReader();
                     while (leitor.Read())
                     {
-                        estado = new Estado
+                        cidade = new Cidade
                         {
                             Id = leitor.GetDecimal(0),
                             Nome = leitor.GetString(1),
-                            Sigla = leitor.GetString(2)
+                            EstadoFk = leitor.GetDecimal(2)
                         };
-                        estadoList.Add(estado);
+                        cidadeList.Add(cidade);
                     }
                 }
                 catch (Exception ex)
@@ -53,7 +56,7 @@ namespace app_i9arcondicionado.Controllers
             {
                 throw new Exception("Conexão é nula");
             }
-            return Ok(estadoList);
+            return Ok(cidadeList);
         }
     }
 }

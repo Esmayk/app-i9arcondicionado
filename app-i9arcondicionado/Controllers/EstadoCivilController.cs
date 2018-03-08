@@ -10,34 +10,34 @@ using System.Web.Http;
 namespace app_i9arcondicionado.Controllers
 {
     [RoutePrefix("api/i9arcondicionado")]
-    public class EstadoController : ApiController
+    public class EstadoCivilController : ApiController
     {
-        private Estado estado;
-        private List<Estado> estadoList = new List<Estado>();
+        private EstadoCivil estadoCivil;
+        private List<EstadoCivil> estadoCivilList = new List<EstadoCivil>();
         private NpgsqlDataReader leitor;
         private NpgsqlCommand query;
 
         [HttpGet]
         [Route("estado")]
-        public IHttpActionResult getEstados()
+        public IHttpActionResult getEstadoCivil()
         {
             NpgsqlConnection conexao = new ConexaoDB().ConexaoPostgreSQL();
             if (conexao != null)
             {
-                string consulta = "select * from estado";
+                string consulta = "select * from estado_civil";
                 query = new NpgsqlCommand(consulta, conexao);
                 try
                 {
                     leitor = query.ExecuteReader();
                     while (leitor.Read())
                     {
-                        estado = new Estado
+                        estadoCivil = new EstadoCivil
                         {
                             Id = leitor.GetDecimal(0),
-                            Nome = leitor.GetString(1),
-                            Sigla = leitor.GetString(2)
+                            Descricao = leitor.GetString(1),
+                            
                         };
-                        estadoList.Add(estado);
+                        estadoCivilList.Add(estadoCivil);
                     }
                 }
                 catch (Exception ex)
@@ -53,7 +53,7 @@ namespace app_i9arcondicionado.Controllers
             {
                 throw new Exception("Conexão é nula");
             }
-            return Ok(estadoList);
+            return Ok(estadoCivilList);
         }
     }
 }

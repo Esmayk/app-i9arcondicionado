@@ -183,14 +183,20 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\CidadeController.cs" />
+    <Compile Include="Controllers\EstadoCivilController.cs" />
     <Compile Include="Controllers\EstadoController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Controllers\TipoPessoaController.cs" />
+    <Compile Include="Controllers\TipoTelefoneController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Cidade.cs" />
     <Compile Include="Models\ConexaoDB.cs" />
     <Compile Include="Models\Estado.cs" />
+    <Compile Include="Models\EstadoCivil.cs" />
+    <Compile Include="Models\TipoPessoa.cs" />
+    <Compile Include="Models\TipoTelefone.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

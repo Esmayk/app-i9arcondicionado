@@ -5,22 +5,24 @@ using System.Web;
 
 namespace app_i9arcondicionado.Models
 {
-    public class Estado
+    public class Cidade
     {
         private Decimal id;
         private String nome;
-        private String sigla;
+        private Decimal estadoFk;
 
-        public Estado()
+        public Cidade()
         {
 
         }
-        public Estado(Decimal id, String nome, String sigla)
+
+        public Cidade(Decimal id, String nome, Decimal estadoFk)
         {
             this.Id = id;
-            this.Nome = nome;
-            this.Sigla = sigla;
+            this.nome = nome;
+            this.estadoFk = estadoFk;
         }
+
         public Decimal Id
         {
             get { return id; }
@@ -32,10 +34,11 @@ namespace app_i9arcondicionado.Models
             get { return nome; }
             set { nome = value; }
         }
-        public String Sigla
+        public Decimal EstadoFk
         {
-            get { return sigla; }
-            set { sigla = value; }
+            get { return estadoFk; }
+            set { estadoFk = value; }
         }
+
     }
 }

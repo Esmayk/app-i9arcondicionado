@@ -10,34 +10,36 @@ using System.Web.Http;
 namespace app_i9arcondicionado.Controllers
 {
     [RoutePrefix("api/i9arcondicionado")]
-    public class EstadoController : ApiController
+    public class TipoTelefoneController : ApiController
     {
-        private Estado estado;
-        private List<Estado> estadoList = new List<Estado>();
+
+        private TipoTelefone tipoTelefone;
+        private List<TipoTelefone> tipoTelefoneList = new List<TipoTelefone>();
         private NpgsqlDataReader leitor;
         private NpgsqlCommand query;
 
         [HttpGet]
-        [Route("estado")]
-        public IHttpActionResult getEstados()
+        [Route("tipoTelefone")]
+        public IHttpActionResult getTipoTelefone()
         {
+
             NpgsqlConnection conexao = new ConexaoDB().ConexaoPostgreSQL();
             if (conexao != null)
             {
-                string consulta = "select * from estado";
+                string consulta = "select * from tipo_telefone";
                 query = new NpgsqlCommand(consulta, conexao);
                 try
                 {
                     leitor = query.ExecuteReader();
                     while (leitor.Read())
                     {
-                        estado = new Estado
+                        tipoTelefone = new TipoTelefone
                         {
                             Id = leitor.GetDecimal(0),
-                            Nome = leitor.GetString(1),
-                            Sigla = leitor.GetString(2)
+                            Descricao = leitor.GetString(1)
+                            
                         };
-                        estadoList.Add(estado);
+                        tipoTelefoneList.Add(tipoTelefone);
                     }
                 }
                 catch (Exception ex)
@@ -53,7 +55,7 @@ namespace app_i9arcondicionado.Controllers
             {
                 throw new Exception("Conexão é nula");
             }
-            return Ok(estadoList);
+            return Ok(tipoTelefoneList);
         }
     }
 }
