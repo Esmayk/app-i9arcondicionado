@@ -2,6 +2,7 @@
 using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -26,7 +27,9 @@ namespace app_i9arcondicionado.Controllers
             {
                 string consulta = "select * from cidade where estado_fk =:estadoFk";
                 query = new NpgsqlCommand(consulta, conexao);
-                
+                query.Parameters.Add(new NpgsqlParameter("estadoFk", DbType.Decimal));
+                query.Parameters[0].Value = estadoFk;
+                query.ExecuteReader();
                 try
                 {
                     while (leitor.Read())
