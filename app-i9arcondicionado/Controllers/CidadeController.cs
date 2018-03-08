@@ -29,9 +29,9 @@ namespace app_i9arcondicionado.Controllers
                 query = new NpgsqlCommand(consulta, conexao);
                 query.Parameters.Add(new NpgsqlParameter("estadoFk", DbType.Decimal));
                 query.Parameters[0].Value = estadoFk;
-                query.ExecuteReader();
                 try
                 {
+                    leitor = query.ExecuteReader();
                     while (leitor.Read())
                     {
                         cidade = new Cidade
