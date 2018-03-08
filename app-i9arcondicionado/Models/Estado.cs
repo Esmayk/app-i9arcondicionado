@@ -9,13 +9,13 @@ namespace app_i9arcondicionado.Models
     {
         private Decimal id;
         private String nome;
-        private Char sigla;
+        private String sigla;
 
         public Estado()
         {
 
         }
-        public Estado(Decimal id, String nome, Char sigla)
+        public Estado(Decimal id, String nome, String sigla)
         {
             this.Id = id;
             this.Nome = nome;
@@ -32,7 +32,7 @@ namespace app_i9arcondicionado.Models
             get { return nome; }
             set { nome = value; }
         }
-        public Char Sigla
+        public String Sigla
         {
             get { return sigla; }
             set { sigla = value; }

@@ -29,8 +29,18 @@ namespace app_i9arcondicionado.Controllers
                 try
                 {
                     leitor = query.ExecuteReader();
+                    while (leitor.Read())
+                    {
+                        estado = new Estado
+                        {
+                            Id = leitor.GetDecimal(0),
+                            Nome = leitor.GetString(1),
+                            Sigla = leitor.GetString(2)
+                        };
+                        estadoList.Add(estado);
+                    }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     throw new Exception(ex.Message);
                 }
@@ -38,17 +48,6 @@ namespace app_i9arcondicionado.Controllers
                 {
                     conexao.Close();
                 }
-                while (leitor.Read())
-                {
-                    estado = new Estado
-                    {
-                        Id = leitor.GetDecimal(0),
-                        Nome = leitor.GetString(1),
-                        Sigla = leitor.GetChar(2)
-                    };
-                    estadoList.Add(estado);
-                }
-
             }
             else
             {
