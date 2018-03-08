@@ -37,6 +37,7 @@ namespace app_i9arcondicionado.Controllers
                             Nome = leitor.GetString(1),
                             EstadoFk = leitor.GetDecimal(2)
                         };
+                        cidadeList.Add(cidade);
                     }
                 }
                 catch (Exception ex)
@@ -52,7 +53,7 @@ namespace app_i9arcondicionado.Controllers
             {
                 throw new Exception("Conexão é nula");
             }
-            return Ok("");
+            return Ok(cidadeList);
         }
     }
 }
