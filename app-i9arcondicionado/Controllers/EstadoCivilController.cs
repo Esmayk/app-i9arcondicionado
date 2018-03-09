@@ -18,7 +18,7 @@ namespace app_i9arcondicionado.Controllers
         private NpgsqlCommand query;
 
         [HttpGet]
-        [Route("estado")]
+        [Route("estadoCivil")]
         public IHttpActionResult getEstadoCivil()
         {
             NpgsqlConnection conexao = new ConexaoDB().ConexaoPostgreSQL();
