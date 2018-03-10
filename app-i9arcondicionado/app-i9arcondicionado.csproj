@@ -203,6 +203,7 @@
     <Compile Include="Models\Endereco.cs" />
     <Compile Include="Models\Estado.cs" />
     <Compile Include="Models\EstadoCivil.cs" />
+    <Compile Include="Models\Pessoa.cs" />
     <Compile Include="Models\Telefone.cs" />
     <Compile Include="Models\TipoPessoa.cs" />
     <Compile Include="Models\TipoTelefone.cs" />
