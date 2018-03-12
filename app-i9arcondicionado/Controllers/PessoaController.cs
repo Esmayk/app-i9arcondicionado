@@ -51,7 +51,7 @@ namespace app_i9arcondicionado.Controllers
 
                     if (pessoa.TelefoneList != null)
                     {
-                        
+
                         foreach (Telefone telefone in pessoa.TelefoneList)
                         {
                             NpgsqlConnection conexao1 = new ConexaoDB().ConexaoPostgreSQL();
@@ -101,6 +101,19 @@ namespace app_i9arcondicionado.Controllers
                     else
                     {
                         pessoa.EnderecoList = new List<Endereco>();
+                    }
+                    if (pessoa.PessoaTipoFk != null)
+                    {
+                        NpgsqlConnection conexao3 = new ConexaoDB().ConexaoPostgreSQL();
+                        String insertPessoaTipo = "insert into pessoa_tipo (pessoa_fk, tipo_pessoa_fk) " +
+                            "values (:pessoaFk, :tipoPessoaFk)";
+                        NpgsqlCommand queryPessoaTipo = new NpgsqlCommand(insertPessoaTipo, conexao3);
+                        queryPessoaTipo.Parameters.Add(new NpgsqlParameter("pessoaFk", DbType.Decimal));
+                        queryPessoaTipo.Parameters.Add(new NpgsqlParameter("tipoPessoaFk", DbType.Decimal));
+                        queryPessoaTipo.Parameters[0].Value = pessoa.Id;
+                        queryPessoaTipo.Parameters[1].Value = pessoa.PessoaTipoFk.TipoPessoaFk;
+                        queryPessoaTipo.ExecuteReader();
+                        conexao3.Close();
                     }
                 }
                 catch (Exception ex)
