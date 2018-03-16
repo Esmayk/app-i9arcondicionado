@@ -202,6 +202,7 @@
     </Compile>
     <Compile Include="Models\Cidade.cs" />
     <Compile Include="Models\ConexaoDB.cs" />
+    <Compile Include="Models\Documento.cs" />
     <Compile Include="Models\Endereco.cs" />
     <Compile Include="Models\Estado.cs" />
     <Compile Include="Models\EstadoCivil.cs" />
