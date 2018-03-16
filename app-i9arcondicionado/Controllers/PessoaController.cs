@@ -47,7 +47,18 @@ namespace app_i9arcondicionado.Controllers
                                    "        where endereco.pessoa_fk = pessoa.pessoa_pk  " +
                                    "      ) en  " +
                                    "    ) as enderecoList, " +
-                                   "    ("+
+                                   "      ( "+
+                                   "      select array_to_json(array_agg(row_to_json(doc))) "+
+                                   "      from("+
+                                   "        select documento_pk as id, numero_documento as numeroDocumento, "+
+                                   "        orgao_expedidor as orgaoExpedidor, data_expedicao as dataExpedicao, "+ 
+                                   "        tipo_documento_fk as tipoDocumentoFk, estado_fk as estadoFk, "+
+                                   "        pessoa_fk as pessoaFk "+
+                                   "        from documento "+
+                                   "        where documento.pessoa_fk = pessoa.pessoa_pk "+
+                                   "      ) doc "+
+                                   "    ) as documentoList, "+
+                                   "    (" +
                                    "    select row_to_json(pt)"+
                                    "    from("+
                                    "      select pessoa_tipo_pk as id, pessoa_fk as pessoaFk, tipo_pessoa_fk as tipoPessoaFk"+
