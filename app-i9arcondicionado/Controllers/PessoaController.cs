@@ -183,18 +183,48 @@ namespace app_i9arcondicionado.Controllers
                     {
                         pessoa.EnderecoList = new List<Endereco>();
                     }
+
+                    if (pessoa.DocumentoList != null)
+                    {
+                        foreach (Documento documento in pessoa.DocumentoList)
+                        {
+                            NpgsqlConnection conexao3 = new ConexaoDB().ConexaoPostgreSQL();
+                            String insertEndereco = "insert into documento (numero_documento, orgao_expedidor, data_expedicao, tipo_documento_fk, estado_fk, pessoa_fk) " +
+                                "values (:numeroDocumento, :orgaoExpedidor, :dataExpedicao, :tipoDocumentoFk, :estadoFk, :pessoaFk)";
+                            NpgsqlCommand queryEndereco = new NpgsqlCommand(insertEndereco, conexao3);
+                            queryEndereco.Parameters.Add(new NpgsqlParameter("numeroDocumento", DbType.String));
+                            queryEndereco.Parameters.Add(new NpgsqlParameter("orgaoExpedidor", DbType.String));
+                            queryEndereco.Parameters.Add(new NpgsqlParameter("dataExpedicao", DbType.DateTime));
+                            queryEndereco.Parameters.Add(new NpgsqlParameter("tipoDocumentoFk", DbType.Decimal));
+                            queryEndereco.Parameters.Add(new NpgsqlParameter("estadoFk", DbType.Decimal));
+                            queryEndereco.Parameters.Add(new NpgsqlParameter("pessoaFk", DbType.Decimal));
+                            queryEndereco.Parameters[0].Value = documento.NumeroDocumento;
+                            queryEndereco.Parameters[1].Value = documento.OrgaoExpedidor;
+                            queryEndereco.Parameters[2].Value = documento.DataExpedicao;
+                            queryEndereco.Parameters[3].Value = documento.TipoDocumentoFk;
+                            queryEndereco.Parameters[4].Value = documento.EstadoFk;
+                            queryEndereco.Parameters[5].Value = pessoa.Id;
+                            queryEndereco.ExecuteReader();
+                            conexao3.Close();
+                        }
+                    }
+                    else
+                    {
+                        pessoa.DocumentoList = new List<Documento>();
+                    }
+
                     if (pessoa.PessoaTipoFk != null)
                     {
-                        NpgsqlConnection conexao3 = new ConexaoDB().ConexaoPostgreSQL();
+                        NpgsqlConnection conexao4 = new ConexaoDB().ConexaoPostgreSQL();
                         String insertPessoaTipo = "insert into pessoa_tipo (pessoa_fk, tipo_pessoa_fk) " +
                             "values (:pessoaFk, :tipoPessoaFk)";
-                        NpgsqlCommand queryPessoaTipo = new NpgsqlCommand(insertPessoaTipo, conexao3);
+                        NpgsqlCommand queryPessoaTipo = new NpgsqlCommand(insertPessoaTipo, conexao4);
                         queryPessoaTipo.Parameters.Add(new NpgsqlParameter("pessoaFk", DbType.Decimal));
                         queryPessoaTipo.Parameters.Add(new NpgsqlParameter("tipoPessoaFk", DbType.Decimal));
                         queryPessoaTipo.Parameters[0].Value = pessoa.Id;
                         queryPessoaTipo.Parameters[1].Value = pessoa.PessoaTipoFk.TipoPessoaFk;
                         queryPessoaTipo.ExecuteReader();
-                        conexao3.Close();
+                        conexao4.Close();
                     }
                 }
                 catch (Exception ex)
