@@ -17,6 +17,47 @@ namespace app_i9arcondicionado.Controllers
         private NpgsqlCommand query;
 
         [HttpGet]
+        [Route("pessoa")]
+        public IHttpActionResult getPessoa()
+        {
+            String json = null;
+            NpgsqlConnection conexao = new ConexaoDB().ConexaoPostgreSQL();
+            if (conexao != null)
+            {
+                try
+                {
+                    String consulta = "select row_to_json(p) from ( "+
+                                " select pe.pessoa_pk as id, pe.nome, pe.nascimento, "+
+                                " pe.cpf, d.numero_documento as rg "+
+                                " from pessoa pe "+
+                                " inner join documento d on d.pessoa_fk = pe.pessoa_pk)p";
+                    query = new NpgsqlCommand(consulta, conexao);
+                    leitor = query.ExecuteReader();
+                    while (leitor.Read())
+                    {
+                        json = leitor.GetString(0);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.Message);
+                }
+                finally
+                {
+                    conexao.Close();
+
+                }
+            }
+            else
+            {
+                throw new Exception("Conexão é nula");
+            }
+            var result = JsonConvert.DeserializeObject<Pessoa>(json);
+            return Ok(result);
+        }
+
+        [HttpGet]
         [Route("pessoa/{id}")]
         public IHttpActionResult getPessoPorId(Decimal id)
         {
@@ -96,6 +137,7 @@ namespace app_i9arcondicionado.Controllers
             var result = JsonConvert.DeserializeObject<Pessoa>(json);
             return Ok(result);
         }
+
         [HttpPost]
         [Route("pessoa")]
         public IHttpActionResult postPessoa(Pessoa pessoa)
