@@ -30,7 +30,8 @@ namespace app_i9arcondicionado.Controllers
                                 " select pe.pessoa_pk as id, pe.nome, pe.nascimento, "+
                                 " pe.cpf, d.numero_documento as rg "+
                                 " from pessoa pe "+
-                                " inner join documento d on d.pessoa_fk = pe.pessoa_pk)p";
+                                " inner join documento d on d.pessoa_fk = pe.pessoa_pk" +
+                                " where pe.status = 'A')p";
                     query = new NpgsqlCommand(consulta, conexao);
                     leitor = query.ExecuteReader();
                     while (leitor.Read())
@@ -53,7 +54,7 @@ namespace app_i9arcondicionado.Controllers
             {
                 throw new Exception("Conexão é nula");
             }
-            var result = JsonConvert.DeserializeObject<Pessoa>(json);
+            var result = JsonConvert.DeserializeObject(json);
             return Ok(result);
         }
 
