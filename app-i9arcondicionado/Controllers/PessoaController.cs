@@ -16,8 +16,7 @@ namespace app_i9arcondicionado.Controllers
         private NpgsqlDataReader leitor;
         private NpgsqlCommand query;
 
-        [HttpGet]
-        [Route("pessoa/{id}")]
+        [HttpGet, Route("pessoa/{id}")]
         public IHttpActionResult getPessoPorId(Decimal id)
         {
             String json = null;
@@ -85,8 +84,7 @@ namespace app_i9arcondicionado.Controllers
             var result = JsonConvert.DeserializeObject<Pessoa>(json);
             return Ok(result);
         }
-        [HttpPost]
-        [Route("pessoa")]
+        [HttpPost, Route("pessoa")]
         public IHttpActionResult postPessoa(Pessoa pessoa)
         {
             NpgsqlConnection conexao = new ConexaoDB().ConexaoPostgreSQL();

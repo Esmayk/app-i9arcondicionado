@@ -18,14 +18,13 @@ namespace app_i9arcondicionado.Controllers
         private NpgsqlDataReader leitor;
         private NpgsqlCommand query;
 
-        [HttpGet]
-        [Route("cidade/{estadoFk}")]
+        [HttpGet, Route("cidade/{estadoFk}")]
         public IHttpActionResult getCidadePorEstado(Decimal estadoFk)
         {
             NpgsqlConnection conexao = new ConexaoDB().ConexaoPostgreSQL();
             if (conexao != null)
             {
-                string consulta = "select * from cidade where estado_fk =:estadoFk";
+                string consulta = "SELECT * FROM cidade WHERE estado_fk =:estadoFk";
                 query = new NpgsqlCommand(consulta, conexao);
                 query.Parameters.Add(new NpgsqlParameter("estadoFk", DbType.Decimal));
                 query.Parameters[0].Value = estadoFk;

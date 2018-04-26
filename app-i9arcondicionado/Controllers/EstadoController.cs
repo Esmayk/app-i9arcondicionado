@@ -1,7 +1,10 @@
 ﻿using app_i9arcondicionado.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -16,28 +19,30 @@ namespace app_i9arcondicionado.Controllers
         private List<Estado> estadoList = new List<Estado>();
         private NpgsqlDataReader leitor;
         private NpgsqlCommand query;
-
+        
         [HttpGet]
         [Route("estado")]
         public IHttpActionResult getEstados()
         {
             NpgsqlConnection conexao = new ConexaoDB().ConexaoPostgreSQL();
+            List<Object> lista = new List<Object>();
             if (conexao != null)
             {
-                string consulta = "select * from estado";
+                string consulta = "SELECT * FROM estado";
                 query = new NpgsqlCommand(consulta, conexao);
                 try
                 {
                     leitor = query.ExecuteReader();
                     while (leitor.Read())
                     {
-                        estado = new Estado
-                        {
-                            Id = leitor.GetDecimal(0),
-                            Nome = leitor.GetString(1),
-                            Sigla = leitor.GetString(2)
-                        };
+                          estado = new Estado
+                     {
+                         Id = leitor.GetDecimal(0),
+                         Nome = leitor.GetString(1),
+                         Sigla = leitor.GetString(2)
+                    };
                         estadoList.Add(estado);
+
                     }
                 }
                 catch (Exception ex)
@@ -53,7 +58,8 @@ namespace app_i9arcondicionado.Controllers
             {
                 throw new Exception("Conexão é nula");
             }
-            return Ok(estadoList);
+
+            return Ok(lista);
         }
     }
 }

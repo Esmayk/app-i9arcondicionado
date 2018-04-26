@@ -18,15 +18,14 @@ namespace app_i9arcondicionado.Controllers
         private NpgsqlDataReader leitor;
         private NpgsqlCommand query;
 
-        [HttpGet]
-        [Route("tipoTelefone")]
+        [HttpGet, Route("tipoTelefone")]
         public IHttpActionResult getTipoTelefone()
         {
 
             NpgsqlConnection conexao = new ConexaoDB().ConexaoPostgreSQL();
             if (conexao != null)
             {
-                string consulta = "select * from tipo_telefone";
+                string consulta = "SELECT * FROM tipo_telefone";
                 query = new NpgsqlCommand(consulta, conexao);
                 try
                 {

@@ -17,14 +17,13 @@ namespace app_i9arcondicionado.Controllers
         private NpgsqlDataReader leitor;
         private NpgsqlCommand query;
 
-        [HttpGet]
-        [Route("estadoCivil")]
+        [HttpGet, Route("estadoCivil")]
         public IHttpActionResult getEstadoCivil()
         {
             NpgsqlConnection conexao = new ConexaoDB().ConexaoPostgreSQL();
             if (conexao != null)
             {
-                string consulta = "select * from estado_civil";
+                string consulta = "SELECT * FROM estado_civil";
                 query = new NpgsqlCommand(consulta, conexao);
                 try
                 {
