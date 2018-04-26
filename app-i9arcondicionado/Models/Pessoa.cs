@@ -19,13 +19,14 @@ namespace app_i9arcondicionado.Models
         private Decimal estadoCivilFk;
         private List<Telefone> telefoneList;
         private List<Endereco> enderecoList;
+        private List<Documento> documentoList;
         private PessoaTipo pessoaTipoFk;
 
         public Pessoa()
         {
 
         }
-        public Pessoa(Decimal id, String nome, String cpf, String sexo, DateTime nascimento, String mae, String pai, DateTime dataCadastro, String status, Decimal estadoCivilFk, List<Telefone> telefoneList, List<Endereco> enderecoList, PessoaTipo pessoaTipoFk)
+        public Pessoa(Decimal id, String nome, String cpf, String sexo, DateTime nascimento, String mae, String pai, DateTime dataCadastro, String status, Decimal estadoCivilFk, List<Telefone> telefoneList, List<Endereco> enderecoList, List<Documento> documentoList, PessoaTipo pessoaTipoFk)
         {
             this.Id = id;
             this.Cpf = cpf;
@@ -36,6 +37,9 @@ namespace app_i9arcondicionado.Models
             this.DataCadastro = dataCadastro;
             this.Status = status;
             this.EstadoCivilFk = estadoCivilFk;
+            this.TelefoneList = telefoneList;
+            this.EnderecoList = enderecoList;
+            this.DocumentoList = documentoList;
             this.PessoaTipoFk = pessoaTipoFk;
         }
         public Decimal Id
@@ -121,6 +125,11 @@ namespace app_i9arcondicionado.Models
             set { enderecoList = value; }
         }
 
+        public List<Documento> DocumentoList
+        {
+            get { return documentoList; }
+            set { documentoList = value; }
+        }
         public PessoaTipo PessoaTipoFk
         {
             get { return pessoaTipoFk; }

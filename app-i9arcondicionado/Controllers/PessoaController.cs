@@ -16,7 +16,49 @@ namespace app_i9arcondicionado.Controllers
         private NpgsqlDataReader leitor;
         private NpgsqlCommand query;
 
-        [HttpGet, Route("pessoa/{id}")]
+        [HttpGet]
+        [Route("pessoa")]
+        public IHttpActionResult getPessoa()
+        {
+            String json = null;
+            NpgsqlConnection conexao = new ConexaoDB().ConexaoPostgreSQL();
+            if (conexao != null)
+            {
+                try
+                {
+                    String consulta = "select row_to_json(p) from ( "+
+                                " select pe.pessoa_pk as id, pe.nome, pe.nascimento, "+
+                                " pe.cpf, d.numero_documento as rg "+
+                                " from pessoa pe "+
+                                " inner join documento d on d.pessoa_fk = pe.pessoa_pk)p";
+                    query = new NpgsqlCommand(consulta, conexao);
+                    leitor = query.ExecuteReader();
+                    while (leitor.Read())
+                    {
+                        json = leitor.GetString(0);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.Message);
+                }
+                finally
+                {
+                    conexao.Close();
+
+                }
+            }
+            else
+            {
+                throw new Exception("Conexão é nula");
+            }
+            var result = JsonConvert.DeserializeObject<Pessoa>(json);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("pessoa/{id}")]
         public IHttpActionResult getPessoPorId(Decimal id)
         {
             String json = null;
@@ -46,7 +88,18 @@ namespace app_i9arcondicionado.Controllers
                                    "        where endereco.pessoa_fk = pessoa.pessoa_pk  " +
                                    "      ) en  " +
                                    "    ) as enderecoList, " +
-                                   "    ("+
+                                   "      ( "+
+                                   "      select array_to_json(array_agg(row_to_json(doc))) "+
+                                   "      from("+
+                                   "        select documento_pk as id, numero_documento as numeroDocumento, "+
+                                   "        orgao_expedidor as orgaoExpedidor, data_expedicao as dataExpedicao, "+ 
+                                   "        tipo_documento_fk as tipoDocumentoFk, estado_fk as estadoFk, "+
+                                   "        pessoa_fk as pessoaFk "+
+                                   "        from documento "+
+                                   "        where documento.pessoa_fk = pessoa.pessoa_pk "+
+                                   "      ) doc "+
+                                   "    ) as documentoList, "+
+                                   "    (" +
                                    "    select row_to_json(pt)"+
                                    "    from("+
                                    "      select pessoa_tipo_pk as id, pessoa_fk as pessoaFk, tipo_pessoa_fk as tipoPessoaFk"+
@@ -170,18 +223,48 @@ namespace app_i9arcondicionado.Controllers
                     {
                         pessoa.EnderecoList = new List<Endereco>();
                     }
+
+                    if (pessoa.DocumentoList != null)
+                    {
+                        foreach (Documento documento in pessoa.DocumentoList)
+                        {
+                            NpgsqlConnection conexao3 = new ConexaoDB().ConexaoPostgreSQL();
+                            String insertEndereco = "insert into documento (numero_documento, orgao_expedidor, data_expedicao, tipo_documento_fk, estado_fk, pessoa_fk) " +
+                                "values (:numeroDocumento, :orgaoExpedidor, :dataExpedicao, :tipoDocumentoFk, :estadoFk, :pessoaFk)";
+                            NpgsqlCommand queryEndereco = new NpgsqlCommand(insertEndereco, conexao3);
+                            queryEndereco.Parameters.Add(new NpgsqlParameter("numeroDocumento", DbType.String));
+                            queryEndereco.Parameters.Add(new NpgsqlParameter("orgaoExpedidor", DbType.String));
+                            queryEndereco.Parameters.Add(new NpgsqlParameter("dataExpedicao", DbType.DateTime));
+                            queryEndereco.Parameters.Add(new NpgsqlParameter("tipoDocumentoFk", DbType.Decimal));
+                            queryEndereco.Parameters.Add(new NpgsqlParameter("estadoFk", DbType.Decimal));
+                            queryEndereco.Parameters.Add(new NpgsqlParameter("pessoaFk", DbType.Decimal));
+                            queryEndereco.Parameters[0].Value = documento.NumeroDocumento;
+                            queryEndereco.Parameters[1].Value = documento.OrgaoExpedidor;
+                            queryEndereco.Parameters[2].Value = documento.DataExpedicao;
+                            queryEndereco.Parameters[3].Value = documento.TipoDocumentoFk;
+                            queryEndereco.Parameters[4].Value = documento.EstadoFk;
+                            queryEndereco.Parameters[5].Value = pessoa.Id;
+                            queryEndereco.ExecuteReader();
+                            conexao3.Close();
+                        }
+                    }
+                    else
+                    {
+                        pessoa.DocumentoList = new List<Documento>();
+                    }
+
                     if (pessoa.PessoaTipoFk != null)
                     {
-                        NpgsqlConnection conexao3 = new ConexaoDB().ConexaoPostgreSQL();
+                        NpgsqlConnection conexao4 = new ConexaoDB().ConexaoPostgreSQL();
                         String insertPessoaTipo = "insert into pessoa_tipo (pessoa_fk, tipo_pessoa_fk) " +
                             "values (:pessoaFk, :tipoPessoaFk)";
-                        NpgsqlCommand queryPessoaTipo = new NpgsqlCommand(insertPessoaTipo, conexao3);
+                        NpgsqlCommand queryPessoaTipo = new NpgsqlCommand(insertPessoaTipo, conexao4);
                         queryPessoaTipo.Parameters.Add(new NpgsqlParameter("pessoaFk", DbType.Decimal));
                         queryPessoaTipo.Parameters.Add(new NpgsqlParameter("tipoPessoaFk", DbType.Decimal));
                         queryPessoaTipo.Parameters[0].Value = pessoa.Id;
                         queryPessoaTipo.Parameters[1].Value = pessoa.PessoaTipoFk.TipoPessoaFk;
                         queryPessoaTipo.ExecuteReader();
-                        conexao3.Close();
+                        conexao4.Close();
                     }
                 }
                 catch (Exception ex)
