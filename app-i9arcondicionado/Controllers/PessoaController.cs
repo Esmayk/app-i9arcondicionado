@@ -14,6 +14,7 @@ namespace app_i9arcondicionado.Controllers
         private NpgsqlDataReader leitor;
         private NpgsqlCommand query;
 
+<<<<<<< HEAD
         [HttpDelete]
         [Route("pessoa/{id}")]
         public IHttpActionResult deletePessoa(Decimal id)
@@ -47,6 +48,9 @@ namespace app_i9arcondicionado.Controllers
 
         [HttpGet]
         [Route("pessoa")]
+=======
+        [HttpGet, Route("pessoa")]
+>>>>>>> 88ec84255eeaca02d57a682b58b36417c86e75fa
         public IHttpActionResult getPessoa()
         {
             List<String> jsonList = new List<string>();
@@ -92,8 +96,7 @@ namespace app_i9arcondicionado.Controllers
             return Ok(objetos);
         }
 
-        [HttpGet]
-        [Route("pessoa/{id}")]
+        [HttpGet, Route("pessoa/{id}")]
         public IHttpActionResult getPessoPorId(Decimal id)
         {
             String json = null;
@@ -174,8 +177,7 @@ namespace app_i9arcondicionado.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
-        [Route("pessoa")]
+        [HttpPost, Route("pessoa")]
         public IHttpActionResult postPessoa(Pessoa pessoa)
         {
             NpgsqlConnection conexao = new ConexaoDB().ConexaoPostgreSQL();
